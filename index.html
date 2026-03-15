@@ -3,11 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Curriculum</title>
+    <title>Komunikasi Antar Agama dan Budaya</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
-    <h1>Interactive Curriculum Content</h1>
-    <p>This page will serve as the main interface for the interactive curriculum.</p>
-    <!-- Add more content here -->
+    <header>
+        <h1>Komunikasi Antar Agama dan Budaya</h1>
+        <nav>
+            <ul>
+                <li><a href="#module1">Module 1</a></li>
+                <li><a href="#module2">Module 2</a></li>
+                <li><a href="#module3">Module 3</a></li>
+                <li><a href="#module4">Module 4</a></li>
+                <li><a href="#module5">Module 5</a></li>
+                <li><a href="#module6">Module 6</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="module1">
+            <h2>Module 1: Introduction</h2>
+            <p>Content for module 1...</p>
+            <div class="chart" id="chart1"></div>
+        </section>
+        <section id="module2">
+            <h2>Module 2: Cultural Sensitivity</h2>
+            <p>Content for module 2...</p>
+            <div class="chart" id="chart2"></div>
+        </section>
+        <section id="module3">
+            <h2>Module 3: Dialogue Between Religions</h2>
+            <p>Content for module 3...</p>
+            <div class="chart" id="chart3"></div>
+        </section>
+        <section id="module4">
+            <h2>Module 4: Challenges and Solutions</h2>
+            <p>Content for module 4...</p>
+            <div class="chart" id="chart4"></div>
+        </section>
+        <section id="module5">
+            <h2>Module 5: Case Studies</h2>
+            <p>Content for module 5...</p>
+            <div class="chart" id="chart5"></div>
+        </section>
+        <section id="module6">
+            <h2>Module 6: Conclusion</h2>
+            <p>Content for module 6...</p>
+            <div class="chart" id="chart6"></div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2026 Komunikasi Antar Agama dan Budaya</p>
+    </footer>
+    <script>
+        // JavaScript functionality for charts
+        function loadCharts() {
+            // Load charts for each module
+            // Example for Chart 1
+            document.getElementById('chart1').innerText = 'Chart 1 Loaded';
+            // Add more chart functionality as needed.
+        }
+        window.onload = loadCharts;
+    </script>
 </body>
 </html>
