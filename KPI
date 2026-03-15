@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eksplorasi Modul: Komunikasi Antar Agama dan Budaya</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom Fonts & Base Styles */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Merriweather:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcfcfc; /* Warm very light gray/off-white */
+            color: #292524; /* Stone 800 */
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: 'Merriweather', serif;
+        }
+
+        /* Chart Container Requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Prevent excessive width */
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px; /* Base height */
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 380px; /* Slightly taller on desktop */
+            }
+        }
+
+        /* Interactive Elements */
+        .module-card {
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+        }
+        .module-card:hover {
+            transform: translateX(4px);
+            background-color: #f5f5f4; /* Stone 100 */
+            border-left-color: #0d9488; /* Teal 600 */
+        }
+        .module-card.active {
+            background-color: #f0fdfa; /* Teal 50 */
+            border-left-color: #0f766e; /* Teal 700 */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Custom Scrollbar for content area */
+        .scrollable-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scrollable-content::-webkit-scrollbar-track {
+            background: #f5f5f4;
+        }
+        .scrollable-content::-webkit-scrollbar-thumb {
+            background: #d6d3d1;
+            border-radius: 4px;
+        }
+        .scrollable-content::-webkit-scrollbar-thumb:hover {
+            background: #a8a29e;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- Chosen Palette: Warm Neutrals with Teal and Amber accents to represent calm, academic rigor, and humanism. Background: Stone-50, Text: Stone-800, Accents: Teal-600 (Primary), Amber-600 (Secondary/Highlights). -->
+
+    <!-- Application Structure Plan: The SPA utilizes a "Dashboard/Learning Hub" architecture. It replaces the linear reading experience of a traditional syllabus with an interactive, side-by-side exploration layout. 
+    1. A header introduces the course context.
+    2. The main body is split: a navigation panel on the left listing the 6 units, and a dynamic content display area on the right. This allows users to jump between topics while maintaining the overall context of the curriculum.
+    3. Below the curriculum explorer, a dedicated section visualizes the practical assessment (Role Play Rubrics) using charts to clearly communicate expectations visually, breaking up textual density. -->
+
+    <!-- Visualization & Content Choices: 
+    1. Syllabus Units -> Goal: Organize & Explore -> Method: Interactive Sidebar & Dynamic Detail Pane -> Interaction: Click module to load details. -> Justification: Facilitates non-linear exploration and reduces cognitive load compared to a long scroll. -> Method: Vanilla JS + Tailwind.
+    2. Role Play Rubric -> Goal: Inform on Assessment Criteria -> Method: Radar Chart -> Interaction: Hover for tooltips. -> Justification: A radar chart perfectly illustrates the necessary balance of multiple skill dimensions (Empathy, Communication, Ethics, Resolution) expected in practical assessments. -> Library: Chart.js (NO SVG).
+    3. Cultural Evolution Concept -> Goal: Change/Process -> Method: Horizontal Bar/Timeline Chart -> Interaction: Hover details. -> Justification: Visually represents the shift from primitive to post-modern, providing a conceptual anchor for Unit 1. -> Library: Chart.js.
+    4. Visual cues -> Goal: Decorate/Indicate -> Method: Unicode Emojis -> Justification: Strictly adheres to NO SVG/Mermaid rule while maintaining a modern UI feel. -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. All visual elements are CSS, Unicode, or Canvas-based. -->
+
+    <!-- Header / Hero Section -->
+    <header class="bg-stone-900 text-stone-50 py-12 px-6 lg:px-12 border-b-8 border-teal-600">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div>
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="bg-amber-600 text-white text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">Program Studi KPI</span>
+                    <span class="text-stone-400 text-sm">Rencana Modul Pembelajaran Komprehensif</span>
+                </div>
+                <h1 class="text-3xl md:text-5xl font-bold leading-tight mb-4">Komunikasi Antar Agama & Budaya</h1>
+                <p class="text-stone-300 max-w-2xl text-lg">
+                    Mengeksplorasi hubungan timbal balik antara pesan, konteks budaya, dan keyakinan dalam dinamika masyarakat global. Platform ini dirancang untuk memandu mahasiswa menavigasi identitas, mengatasi hambatan psikologis, dan mempraktikkan mediasi perdamaian.
+                </p>
+            </div>
+            <div class="hidden md:flex flex-col items-center bg-stone-800 p-4 rounded-lg shadow-inner">
+                <span class="text-4xl mb-2">🌍🤝🗣️</span>
+                <span class="text-xs text-stone-400 tracking-widest uppercase">Fokus Mata Kuliah</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area: Interactive Curriculum -->
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 py-8 flex flex-col gap-12">
+        
+        <!-- Section: Peta Kurikulum Interaktif -->
+        <section id="curriculum-explorer">
+            <div class="mb-6 border-b border-stone-200 pb-4">
+                <h2 class="text-2xl font-bold text-teal-800 mb-2">Peta Kurikulum Interaktif</h2>
+                <p class="text-stone-600">
+                    Bagian ini menyajikan arsitektur utama mata kuliah. Pilih unit pembelajaran pada panel sebelah kiri untuk mengeksplorasi topik bahasan, Capaian Pembelajaran Mata Kuliah (CPMK), serta aktivitas praktikal yang dirancang untuk membangun kompetensi komunikasi lintas batas.
+                </p>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-6 h-[600px]">
+                
+                <!-- Left Panel: Module List -->
+                <div class="lg:w-1/3 bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden flex flex-col h-full">
+                    <div class="p-4 bg-stone-100 border-b border-stone-200 font-semibold text-stone-700 flex justify-between items-center">
+                        <span>Daftar Unit</span>
+                        <span class="text-xs font-normal bg-stone-200 px-2 py-1 rounded text-stone-600">6 Modul</span>
+                    </div>
+                    <div class="overflow-y-auto scrollable-content flex-grow p-2" id="module-list-container">
+                        <!-- Module list items injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Right Panel: Module Details -->
+                <div class="lg:w-2/3 bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden flex flex-col h-full">
+                    <div class="overflow-y-auto scrollable-content p-6 md:p-8 h-full relative" id="module-detail-container">
+                        <!-- Placeholder before selection -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-stone-400 p-8 text-center" id="empty-state">
+                            <span class="text-6xl mb-4">📖</span>
+                            <h3 class="text-xl font-bold mb-2">Pilih Modul Pembelajaran</h3>
+                            <p>Klik pada salah satu unit di panel kiri untuk melihat detail materi, aktivitas, dan capaian pembelajaran.</p>
+                        </div>
+                        
+                        <!-- Content container (hidden initially) -->
+                        <div id="detail-content" class="hidden opacity-0 transition-opacity duration-300">
+                            <div class="mb-2 text-teal-600 font-bold tracking-wide uppercase text-sm" id="detail-unit-num">Unit X</div>
+                            <h2 class="text-3xl font-bold text-stone-800 mb-4 leading-snug" id="detail-title">Title</h2>
+                            
+                            <div class="flex flex-wrap gap-2 mb-6" id="detail-keywords">
+                                <!-- Keywords injected here -->
+                            </div>
+
+                            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6 rounded-r-lg">
+                                <h4 class="font-bold text-amber-800 mb-1 text-sm uppercase">Capaian Pembelajaran (Sub-CPMK)</h4>
+                                <p class="text-stone-700" id="detail-cpmk">CPMK text</p>
+                            </div>
+
+                            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                                <div>
+                                    <h4 class="font-bold text-stone-800 border-b border-stone-200 pb-2 mb-3">Pendahuluan (Apersepsi)</h4>
+                                    <p class="text-stone-600" id="detail-apersepsi">Apersepsi text</p>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-stone-800 border-b border-stone-200 pb-2 mb-3">Uraian Materi Pokok</h4>
+                                    <p class="text-stone-600" id="detail-uraian">Uraian text</p>
+                                </div>
+                            </div>
+
+                            <!-- Role Play / Activity Section (Conditional) -->
+                            <div id="detail-activity-container" class="hidden mt-8 bg-stone-50 border border-stone-200 rounded-lg p-6 relative overflow-hidden">
+                                <div class="absolute top-0 right-0 bg-teal-600 text-white px-3 py-1 rounded-bl-lg text-xs font-bold uppercase">Aktivitas Praktikal</div>
+                                <h3 class="text-xl font-bold text-teal-800 mb-2 flex items-center gap-2">
+                                    <span>🎭</span> <span id="activity-title">Role Play Title</span>
+                                </h3>
+                                <div class="space-y-3 mt-4">
+                                    <p><strong class="text-stone-700">Skenario:</strong> <span class="text-stone-600" id="activity-scenario">Skenario text</span></p>
+                                    <p id="activity-roles-container"><strong class="text-stone-700">Peran:</strong> <span class="text-stone-600" id="activity-roles">Roles text</span></p>
+                                    <div class="bg-white p-3 rounded border border-stone-200 text-sm">
+                                        <strong class="text-teal-700 block mb-1">Instruksi Eksekusi:</strong> 
+                                        <span class="text-stone-600" id="activity-instruction">Instruction text</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Evaluation Section (Conditional for Unit 6) -->
+                            <div id="detail-eval-container" class="hidden mt-8 bg-stone-900 text-stone-50 rounded-lg p-6">
+                                <h3 class="text-xl font-bold text-amber-500 mb-2">🏆 Evaluasi Akhir Modul (Komprehensif)</h3>
+                                <p class="text-stone-300" id="eval-text">Eval text</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Visualisasi Konsep & Asesmen -->
+        <section id="assessment-visualization" class="bg-white rounded-xl shadow-sm border border-stone-200 p-6 md:p-8">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-teal-800 mb-2">Visualisasi Asesmen & Dinamika Budaya</h2>
+                <p class="text-stone-600">
+                    Mata kuliah ini sangat menitikberatkan pada penerapan praktis melalui simulasi Role Play. Di bawah ini adalah visualisasi kriteria penilaian yang menuntut keseimbangan kemampuan mahasiswa. Selain itu, terdapat visualisasi konseptual mengenai pergeseran budaya yang menjadi fondasi teoretis.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-start">
+                
+                <!-- Chart 1: Assessment Radar -->
+                <div>
+                    <h3 class="text-lg font-bold text-center text-stone-800 mb-2">Keseimbangan Kompetensi Role Play</h3>
+                    <p class="text-sm text-center text-stone-500 mb-6 px-4">Penilaian berdasar pada instrumen skoring (1-4) yang mensyaratkan mahasiswa memiliki kemampuan holistik saat berinteraksi lintas budaya.</p>
+                    
+                    <!-- REQUIRED CHART CONTAINER WITH EXACT RULES -->
+                    <div class="chart-container">
+                        <canvas id="rubricChart"></canvas>
+                    </div>
+
+                    <div class="mt-6 grid grid-cols-2 gap-4 text-sm">
+                        <div class="bg-stone-50 p-3 rounded border border-stone-100">
+                            <strong class="block text-teal-700">Empati & Penguasaan</strong>
+                            <span class="text-stone-600 text-xs">Sejauh mana mahasiswa menjiwai karakter dan perspektif orang lain.</span>
+                        </div>
+                        <div class="bg-stone-50 p-3 rounded border border-stone-100">
+                            <strong class="block text-teal-700">Kecakapan Komunikasi</strong>
+                            <span class="text-stone-600 text-xs">Penggunaan bahasa verbal dan non-verbal yang tepat konteks.</span>
+                        </div>
+                        <div class="bg-stone-50 p-3 rounded border border-stone-100">
+                            <strong class="block text-teal-700">Resolusi Masalah</strong>
+                            <span class="text-stone-600 text-xs">Kemampuan menemukan "Common Ground" dalam skenario konflik.</span>
+                        </div>
+                        <div class="bg-stone-50 p-3 rounded border border-stone-100">
+                            <strong class="block text-teal-700">Etika Komunikasi</strong>
+                            <span class="text-stone-600 text-xs">Kesantunan, pemilihan diksi inklusif, menghindari stereotip.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Cultural Evolution Conceptual Bar -->
+                <div>
+                    <h3 class="text-lg font-bold text-center text-stone-800 mb-2">Kompleksitas Komunikasi & Evolusi Budaya</h3>
+                    <p class="text-sm text-center text-stone-500 mb-6 px-4">Ilustrasi konseptual (berkaitan dengan Unit 1) mengenai peningkatan kompleksitas medium dan noise seiring pergeseran era kebudayaan.</p>
+                    
+                    <!-- REQUIRED CHART CONTAINER WITH EXACT RULES -->
+                    <div class="chart-container">
+                        <canvas id="evolutionChart"></canvas>
+                    </div>
+
+                    <div class="mt-6 bg-teal-50 border-l-4 border-teal-600 p-4 rounded text-sm text-stone-700">
+                        <strong class="block mb-2">💡 Tips Implementasi Dosen:</strong>
+                        <ul class="list-disc pl-5 space-y-1 text-xs">
+                            <li><strong>Refleksi:</strong> Setelah setiap Role Play, berikan waktu 10 menit bagi penonton untuk memberikan feedback.</li>
+                            <li><strong>Integrasi Teknologi:</strong> Gunakan Handphone mahasiswa untuk merekam Role Play mereka, lalu bedah bersama (sesuai poin Media di RPS).</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-900 text-stone-400 py-6 text-center text-sm mt-auto">
+        <p>Aplikasi Eksplorasi Rencana Pembelajaran - Komunikasi Penyiaran Islam</p>
+        <p class="mt-1">Didesain untuk interaktivitas dan kemudahan pemahaman.</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // 1. Data Definition based on the Source Report
+        const curriculumData = [
+            {
+                id: 1,
+                title: "FONDASI TEORETIS DAN DINAMIKA KEBUDAYAAN",
+                rpsCoverage: "1, 2, 5, 8",
+                topics: "Pengertian, Teori Dasar, dan Evolusi Budaya (Primitif ke Post-Modern).",
+                cpmk: "Mahasiswa mampu menjelaskan definisi komunikasi antaragama/budaya dan memetakan sejarah perkembangannya.",
+                keywords: ["Intercultural Communication", "Linear Theory", "Post-Modernism"],
+                apersepsi: "Menampilkan dua gambar komparatif: Suku pedalaman yang berkomunikasi melalui asap vs. masyarakat urban yang menggunakan aplikasi translasi AI. Pertanyaan Pemantik: Apakah esensi komunikasi berubah seiring majunya teknologi?",
+                uraian: "Objek kajian utama adalah hubungan timbal balik antara pesan dan konteks budaya/iman. Memahami evolusi budaya berarti menelaah bagaimana masyarakat bergeser dari kearifan lokal tradisional menuju kompleksitas masyarakat digital (Post-modern).",
+                hasRolePlay: false
+            },
+            {
+                id: 2,
+                title: "IDENTITAS, RAS, DAN SISTEM KEPERCAYAAN",
+                rpsCoverage: "6, 7, 12",
+                topics: "Ras, Suku, Bangsa, Pandangan Hidup, dan Proses Perubahan Budaya.",
+                cpmk: "Mahasiswa mampu menguraikan peran identitas etnik dan sistem kepercayaan dalam membentuk pola komunikasi.",
+                keywords: ["Ethnic Identity", "Worldview", "Asimilasi", "Akulturasi"],
+                apersepsi: "Diskusi tentang fenomena 'Blasteran' atau 'Indo' di Indonesia dan bagaimana mereka menegosiasikan identitas budayanya dalam keseharian.",
+                uraian: "Sistem Kepercayaan (Agama) berfungsi sebagai 'kacamata' dalam melihat dunia. Menelaah proses perubahan: Mengapa ada kebudayaan yang lebur sepenuhnya (Asimilasi) dan ada yang berpadu berdampingan tanpa hilang aslinya (Akulturasi).",
+                hasRolePlay: false
+            },
+            {
+                id: 3,
+                title: "HAMBATAN & PSIKOLOGI KOMUNIKASI INTERKULTURAL",
+                rpsCoverage: "9, 10, 13",
+                topics: "Hambatan (Noise), Culture Shock, Stereotip, Prasangka, dan Rasisme.",
+                cpmk: "Mahasiswa mampu mengidentifikasi hambatan psikologis dan sosial dalam interaksi lintas budaya.",
+                keywords: ["Noise", "Culture Shock", "Stereotip", "Prasangka"],
+                apersepsi: "Analisis mengenai mengapa pesan yang sama bisa diartikan sebagai pujian di satu budaya, namun hinaan di budaya lain.",
+                uraian: "Mendalami filter psikologis yang menghalangi komunikasi efektif. Fokus pada pengenalan dan dekonstruksi prasangka serta rasisme yang sering tidak disadari.",
+                hasRolePlay: true,
+                rolePlayData: {
+                    title: "ROLE PLAY 1: Simulasi Culture Shock",
+                    scenario: "Seorang mahasiswa dari desa terpencil di Indonesia Timur mendapat beasiswa ke universitas besar di Jakarta atau luar negeri.",
+                    roles: "Mahasiswa Baru (mengalami culture shock), Teman Sekelas (memberi stereotip), dan Dosen (sebagai mediator).",
+                    instruction: "Tunjukkan secara teatrikal bagaimana 'Noise' berupa perbedaan bahasa daerah, aksen, dan kebiasaan sehari-hari memicu kesalahpahaman akut."
+                }
+            },
+            {
+                id: 4,
+                title: "ETIKA, MEDIA, DAN PUBLIC SPEAKING",
+                rpsCoverage: "3, 11",
+                topics: "Etika Komunikasi, Media Antarumat Beragama, dan Praktik Public Speaking.",
+                cpmk: "Mahasiswa mampu mempraktikkan komunikasi publik yang santun dan etis di hadapan audiens yang beragam.",
+                keywords: ["Etika Komunikasi", "Inklusivitas", "Public Speaking"],
+                apersepsi: "Menganalisis cuplikan pidato tokoh dunia yang berhasil menyatukan perbedaan vs pidato yang memicu kontroversi.",
+                uraian: "Fokus pada pemilihan diksi, sensitivitas budaya, dan pemanfaatan media untuk menyebarkan narasi positif antarumat beragama.",
+                hasRolePlay: true,
+                rolePlayData: {
+                    title: "ROLE PLAY 2: Pidato Kerukunan",
+                    scenario: "Mahasiswa berperan sebagai perwakilan pemuda Islam yang diminta memberi sambutan dalam acara peresmian taman perdamaian yang dihadiri berbagai tokoh agama.",
+                    roles: "Orator (Pemuda), Audiens Lintas Iman.",
+                    instruction: "Gunakan diksi yang inklusif, hindari istilah teknis agama yang eksklusif/menyinggung, dan gunakan referensi universal (misal: nilai kemanusiaan)."
+                }
+            },
+            {
+                id: 5,
+                title: "STRATEGI MEDIASI DAN PENYELESAIAN KONFLIK",
+                rpsCoverage: "4",
+                topics: "Konsep Mediasi Konflik Keagamaan.",
+                cpmk: "Mahasiswa mampu merancang langkah-langkah mediasi untuk konflik berbasis identitas.",
+                keywords: ["Mediasi", "Resolusi Konflik", "Active Listening", "Common Ground"],
+                apersepsi: "Studi kasus singkat tentang konflik pendirian rumah ibadah di Indonesia dan peran FKUB.",
+                uraian: "Mempelajari tahapan mediasi pihak ketiga. Berpindah dari pendekatan konfrontatif ke pendekatan kolaboratif berbasis pencarian kebutuhan mendasar (needs) di balik posisi (positions) yang berseberangan.",
+                hasRolePlay: true,
+                rolePlayData: {
+                    title: "ROLE PLAY 3: Sidang Mediasi Desa",
+                    scenario: "Terjadi sengketa batas lahan antara tempat ibadah A dan warga sekitar. Suasana memanas karena isu agraria dibawa ke ranah sentimen agama.",
+                    roles: "Pengurus Tempat Ibadah, Perwakilan Warga, dan Mahasiswa KPI (sebagai Mediator independen dari FKUB).",
+                    instruction: "Mediator harus mendemonstrasikan teknik 'Active Listening', meredakan emosi, dan mengarahkan diskusi untuk mencari 'Common Ground' (kepentingan bersama)."
+                }
+            },
+            {
+                id: 6,
+                title: "HUMANISME DAN PERDAMAIAN GLOBAL",
+                rpsCoverage: "14",
+                topics: "Pilar Humanisme, Universalisme, Kesatuan, dan Perdamaian.",
+                cpmk: "Mahasiswa mampu mensintesis seluruh materi menjadi visi perdamaian yang kokoh.",
+                keywords: ["Global Peace", "Human Dignity", "Unity in Diversity"],
+                apersepsi: "Membedah dokumen 'Human Fraternity' (Persaudaraan Manusia) yang ditandatangani tokoh-tokoh agama dunia (Paus Fransiskus & Imam Besar Al-Azhar).",
+                uraian: "Puncak dari mata kuliah. Menyatukan pemahaman teoretis dan keterampilan praktis untuk mempromosikan martabat kemanusiaan di atas perbedaan dogmatis.",
+                hasRolePlay: false,
+                evalData: "Proyek Akhir: Membuat video kampanye media sosial berdurasi 60 detik tentang 'Indahnya Keberagaman di Indonesia' dengan menerapkan teori-teori (akulturasi, dekonstruksi stereotip, etika inklusif) yang telah dipelajari."
+            }
+        ];
+
+        // 2. Application State & DOM Elements
+        let activeModuleId = null;
+        const listContainer = document.getElementById('module-list-container');
+        const emptyState = document.getElementById('empty-state');
+        const detailContent = document.getElementById('detail-content');
+
+        // Detail elements
+        const dNum = document.getElementById('detail-unit-num');
+        const dTitle = document.getElementById('detail-title');
+        const dKeywords = document.getElementById('detail-keywords');
+        const dCpmk = document.getElementById('detail-cpmk');
+        const dApersepsi = document.getElementById('detail-apersepsi');
+        const dUraian = document.getElementById('detail-uraian');
+        
+        // Activity elements
+        const dActivityCont = document.getElementById('detail-activity-container');
+        const aTitle = document.getElementById('activity-title');
+        const aScenario = document.getElementById('activity-scenario');
+        const aRolesCont = document.getElementById('activity-roles-container');
+        const aRoles = document.getElementById('activity-roles');
+        const aInst = document.getElementById('activity-instruction');
+
+        // Eval element
+        const dEvalCont = document.getElementById('detail-eval-container');
+        const dEvalText = document.getElementById('eval-text');
+
+        // 3. UI Generation Logic
+        function renderModuleList() {
+            listContainer.innerHTML = '';
+            curriculumData.forEach(mod => {
+                const item = document.createElement('div');
+                item.className = `module-card p-4 border-b border-stone-100 flex flex-col gap-1`;
+                item.onclick = () => selectModule(mod.id);
+                item.dataset.id = mod.id;
+
+                // Icons logic based on content
+                let icon = '📘';
+                if(mod.hasRolePlay) icon = '🎭';
+                if(mod.id === 6) icon = '🌍';
+
+                item.innerHTML = `
+                    <div class="flex justify-between items-center text-xs font-bold text-stone-500 uppercase tracking-wide">
+                        <span>Unit ${mod.id}</span>
+                        <span>Materi RPS: ${mod.rpsCoverage}</span>
+                    </div>
+                    <div class="font-bold text-stone-800 text-base leading-tight">${icon} ${mod.title}</div>
+                    <div class="text-xs text-stone-500 truncate mt-1">${mod.topics}</div>
+                `;
+                listContainer.appendChild(item);
+            });
+        }
+
+        function selectModule(id) {
+            // Update state & list styling
+            activeModuleId = id;
+            document.querySelectorAll('.module-card').forEach(el => {
+                if(parseInt(el.dataset.id) === id) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+
+            const mod = curriculumData.find(m => m.id === id);
+            if(!mod) return;
+
+            // Animate transition out
+            detailContent.classList.remove('opacity-100');
+            emptyState.style.display = 'none';
+
+            setTimeout(() => {
+                // Populate data
+                dNum.textContent = `Unit ${mod.id} • (Materi RPS: ${mod.rpsCoverage})`;
+                dTitle.textContent = mod.title;
+                
+                // Keywords
+                dKeywords.innerHTML = mod.keywords.map(kw => 
+                    `<span class="bg-stone-100 text-stone-600 border border-stone-200 text-xs px-2 py-1 rounded-full uppercase tracking-wider">${kw}</span>`
+                ).join('');
+
+                dCpmk.textContent = mod.cpmk;
+                
+                // Add bold formatting to subheadings inside text if needed, but plain text is fine based on prompt
+                dApersepsi.textContent = mod.apersepsi;
+                dUraian.innerHTML = `<strong>Topik Utama:</strong> ${mod.topics}<br><br>${mod.uraian}`;
+
+                // Handle Role Play conditional display
+                if(mod.hasRolePlay) {
+                    dActivityCont.classList.remove('hidden');
+                    aTitle.textContent = mod.rolePlayData.title;
+                    aScenario.textContent = mod.rolePlayData.scenario;
+                    if(mod.rolePlayData.roles) {
+                        aRolesCont.style.display = 'block';
+                        aRoles.textContent = mod.rolePlayData.roles;
+                    } else {
+                        aRolesCont.style.display = 'none';
+                    }
+                    aInst.textContent = mod.rolePlayData.instruction;
+                } else {
+                    dActivityCont.classList.add('hidden');
+                }
+
+                // Handle Final Eval conditional display
+                if(mod.evalData) {
+                    dEvalCont.classList.remove('hidden');
+                    dEvalText.textContent = mod.evalData;
+                } else {
+                    dEvalCont.classList.add('hidden');
+                }
+
+                // Show content
+                detailContent.classList.remove('hidden');
+                // Small delay to allow display:block to apply before animating opacity
+                requestAnimationFrame(() => {
+                    detailContent.classList.add('opacity-100');
+                });
+
+            }, 200); // 200ms matches transition duration
+        }
+
+        // 4. Chart Validations & Implementations (Chart.js)
+        function initCharts() {
+            // Chart 1: Radar Chart for Rubrics
+            const ctxRadar = document.getElementById('rubricChart').getContext('2d');
+            new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: [
+                        ['Empati &', 'Penguasaan Peran'], 
+                        ['Kecakapan', 'Komunikasi'], 
+                        ['Resolusi', 'Masalah'], 
+                        ['Etika', 'Komunikasi']
+                    ], // Array of arrays handles wrapping inherently in Chart.js
+                    datasets: [{
+                        label: 'Target Capaian Ideal (Skor Maks: 4)',
+                        data: [4, 4, 4, 4],
+                        backgroundColor: 'rgba(13, 148, 136, 0.2)', // Teal 600 with opacity
+                        borderColor: 'rgba(13, 148, 136, 1)',
+                        pointBackgroundColor: 'rgba(217, 119, 6, 1)', // Amber 600
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(217, 119, 6, 1)',
+                        borderWidth: 2,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // CRITICAL for container fit
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                            grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                            pointLabels: {
+                                font: { family: "'Inter', sans-serif", size: 11, weight: 'bold' },
+                                color: '#444'
+                            },
+                            ticks: {
+                                beginAtZero: true,
+                                max: 4,
+                                stepSize: 1,
+                                display: false // Hide numbers to make it look cleaner, tooltip handles data
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { font: { family: "'Inter', sans-serif", size: 12 } }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(28, 25, 23, 0.9)', // Stone 900
+                            titleFont: { family: "'Inter', sans-serif" },
+                            bodyFont: { family: "'Inter', sans-serif" },
+                            callbacks: {
+                                label: function(context) {
+                                    return `Skor Target: ${context.raw} / 4`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: Conceptual Bar Chart (Evolution of Communication Complexity)
+            const ctxBar = document.getElementById('evolutionChart').getContext('2d');
+            
+            // Custom plugin to wrap long labels if they were a single string, 
+            // but we'll use arrays for x-axis labels to force wrapping easily.
+            const evolutionLabels = [
+                ['Era Primitif', '(Simbolik Dasar)'], 
+                ['Era Tradisional', '(Kearifan Lokal)'], 
+                ['Era Modern', '(Media Massa)'], 
+                ['Era Post-Modern', '(Digital & AI)']
+            ];
+
+            new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: evolutionLabels,
+                    datasets: [
+                        {
+                            label: 'Kompleksitas Pesan/Media',
+                            data: [20, 45, 75, 100],
+                            backgroundColor: 'rgba(13, 148, 136, 0.8)', // Teal
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Potensi Hambatan (Noise)',
+                            data: [15, 30, 60, 95],
+                            backgroundColor: 'rgba(217, 119, 6, 0.8)', // Amber
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // CRITICAL
+                    indexAxis: 'y', // Horizontal bar chart looks better for timelines/progressions
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 110,
+                            ticks: { display: false }, // Conceptual, so exact numbers don't matter visually
+                            grid: { display: false },
+                            title: { display: true, text: 'Tingkat Kompleksitas (Konseptual)' }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { font: { family: "'Inter', sans-serif", size: 11 } }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { boxWidth: 12, font: { family: "'Inter', sans-serif", size: 11 } }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(28, 25, 23, 0.9)',
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) label += ': ';
+                                    if(context.raw === 100 || context.raw === 95) label += "Sangat Tinggi";
+                                    else if(context.raw >= 60) label += "Tinggi";
+                                    else if(context.raw >= 30) label += "Sedang";
+                                    else label += "Rendah";
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 5. Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            renderModuleList();
+            initCharts();
+            
+            // Optionally auto-select first module, but empty state is better for exploration discovery
+            // selectModule(1); 
+        });
+
+    </script>
+</body>
+</html>
